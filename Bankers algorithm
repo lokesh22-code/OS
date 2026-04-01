@@ -1,0 +1,43 @@
+#include <stdio.h>
+
+int main() {
+    int i, j, k, n = 3, m = 2, count = 0;
+
+    int alloc[3][2] = {{1,0},{0,1},{1,1}};
+    int max[3][2]   = {{2,1},{1,2},{2,2}};
+    int avail[2]    = {1,1};
+
+    int need[3][2], finish[3] = {0}, safe[3];
+
+    // Calculate Need
+    for(i=0;i<n;i++)
+        for(j=0;j<m;j++)
+            need[i][j] = max[i][j] - alloc[i][j];
+
+    // Find safe sequence
+    while(count < n) {
+        for(i=0;i<n;i++) {
+            if(finish[i] == 0) {
+
+                for(j=0;j<m;j++)
+                    if(need[i][j] > avail[j])
+                        break;
+
+                if(j == m) {
+                    for(k=0;k<m;k++)
+                        avail[k] += alloc[i][k];
+
+                    safe[count++] = i;
+                    finish[i] = 1;
+                }
+            }
+        }
+    }
+
+    // Print result
+    printf("Safe sequence: ");
+    for(i=0;i<n;i++)
+        printf("P%d ", safe[i]);
+
+    return 0;
+}
