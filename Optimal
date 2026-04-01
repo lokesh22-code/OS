@@ -1,0 +1,54 @@
+#include <stdio.h>
+
+int main() {
+    int pages[] = {1,2,3,1,4,5};
+    int frames[3], i, j, k, n = 6, f = 3, fault = 0;
+
+    // Initialize frames
+    for(i=0;i<f;i++)
+        frames[i] = -1;
+
+    for(i=0;i<n;i++) {
+        int found = 0;
+
+        // Check if page already exists
+        for(j=0;j<f;j++) {
+            if(frames[j] == pages[i]) {
+                found = 1;
+                break;
+            }
+        }
+
+        // If page fault → apply Optimal
+        if(!found) {
+            int pos = -1, farthest = -1;
+
+            // Find page used farthest in future
+            for(j=0;j<f;j++) {
+                for(k=i+1;k<n;k++) {
+                    if(frames[j] == pages[k])
+                        break;
+                }
+
+                // If page not used again
+                if(k == n) {
+                    pos = j;
+                    break;
+                }
+
+                // Select farthest use
+                if(k > farthest) {
+                    farthest = k;
+                    pos = j;
+                }
+            }
+
+            frames[pos] = pages[i];
+            fault++;
+        }
+    }
+
+    printf("Page Faults = %d", fault);
+
+    return 0;
+}
